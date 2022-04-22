@@ -1,11 +1,46 @@
 #Commands
 CC=gcc
 MPICC=mpicc
+#MPICC=vtcc -vtcc mpicc
 RM=rm -f
 MAKEDEPEND=makedepend
 
+TUSELESSPART=USELESS
+TUSELESSPART=NOUSELESS
+CCUSELESSPART=-D$(TUSELESSPART)
+
+TSPLIT=VERTICAL
+#TSPLIT=HORIZONTAL
+CCSPLIT=-D$(TSPLIT)
+
+TVERBOSE=VERBOSE
+TVERBOSE=NOVERBOSE
+CCVERBOSE=-D$(TVERBOSE)
+
+TASSERT=ASSERT
+TASSERT=NOASSERT
+CCASSERT=-D$(TASSERT)
+
+TBARRIER=NOBARRIER
+#TBARRIER=BARRIER
+CCBARRIER=-D$(TBARRIER)
+
+TMPI=NAIVEMPI
+#TMPI=FACTORIZEDMPI
+CCMPI = -D$(TMPI)
+
+CCALL = $(CCUSELESSPART) $(CCSPLIT) $(CCVERBOSE) $(CCASSERT) $(CCBARRIER) $(CCMPI)
+
+
+AVX=-mavx512
+AVX=-mavx2
+#AVX=-mno-avx
+OPTI=
+OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vectorize -ftree-loop-vectorize 
+
+
 #flags
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -O3 $(OPTI) $(AVX)
 LDFLAGS=-lm
 
 #Files
@@ -18,10 +53,10 @@ TARGET=lbm display
 all: $(TARGET)
 
 %.o: %.c
-	$(MPICC) $(CFLAGS) -c -o $@ $<
+	$(MPICC) $(CCALL) $(CFLAGS) -c -o $@ $<
 
 lbm: $(LBM_OBJECTS)
-	$(MPICC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(MPICC) $(CCALL) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 display: display.c
 	$(CC) $(CFLAGS) -o $@ display.c

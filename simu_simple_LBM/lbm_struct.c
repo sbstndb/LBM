@@ -16,7 +16,7 @@ void Mesh_init(Mesh *mesh, int width, int height) {
 
   // alloc cells memory
   mesh->cells = NULL;
-  mesh->cells = malloc(width * height * DIRECTIONS * sizeof(double));
+  mesh->cells = aligned_alloc(64, width * height * DIRECTIONS * sizeof(double));
 
   // errors
   if (mesh->cells == NULL) {

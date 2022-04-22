@@ -56,7 +56,7 @@ FILE *open_output_file(lbm_comm_t *mesh_comm) {
 
 void close_file(FILE *fp) {
   // wait all before closing
-  MPI_Barrier(MPI_COMM_WORLD);
+  // MPI_Barrier(MPI_COMM_WORLD);
   // close file
   fclose(fp);
 }
@@ -162,28 +162,34 @@ int main(int argc, char *argv[]) {
 
   // time steps
   for (i = 1; i < ITERATIONS; i++) {
+#if VERBOSE
     // print progress
     if (rank == RANK_MASTER)
       printf("Progress [%5d / %5d]\n", i, ITERATIONS);
+#endif
 
     // compute special actions (border, obstacle...)
     special_cells(&mesh, &mesh_type, &mesh_comm);
 
-    // need to wait all before doing next step
+// need to wait all before doing next step
+#if BARRIER
     MPI_Barrier(MPI_COMM_WORLD);
-
+#endif
     // compute collision term
     collision(&temp, &mesh);
 
+#if BARRIER
     // need to wait all before doing next step
     MPI_Barrier(MPI_COMM_WORLD);
-
+#endif
     // propagate values from node to neighboors
     lbm_comm_ghost_exchange(&mesh_comm, &temp);
     propagation(&mesh, &temp);
 
+#if BARRIER
     // need to wait all before doing next step
     MPI_Barrier(MPI_COMM_WORLD);
+#endif
 
     // save step
     if (i % WRITE_STEP_INTERVAL == 0 && lbm_gbl_config.output_filename != NULL)
@@ -193,6 +199,7 @@ int main(int argc, char *argv[]) {
   if (rank == RANK_MASTER && fp != NULL) {
     close_file(fp);
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 
   // free memory
   lbm_comm_release(&mesh_comm);
