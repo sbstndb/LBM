@@ -1,5 +1,5 @@
 /********************  HEADERS  *********************/
-#include "lbm_struct.h"
+#include "../include/lbm_struct.h"
 #include <stdlib.h>
 
 /*******************  FUNCTION  *********************/

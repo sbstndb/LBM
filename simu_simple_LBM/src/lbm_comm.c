@@ -1,5 +1,5 @@
 /*******************HEADERS *********************/
-#include "lbm_comm.h"
+#include "../include/lbm_comm.h"
 #include <assert.h>
 #include <math.h>
 #include <stdint.h>
@@ -240,15 +240,14 @@ void lbm_comm_sync_ghosts_vertical(lbm_comm_t *mesh, Mesh *mesh_to_process,
                  target_rank, 0, MPI_COMM_WORLD);
       }
     }
-#elif FACTORISEDMPI
+#elif FACTORIZEDMPI
     for (x = 1; x < mesh_to_process->width - 2; x++) {
       for (k = 0; k < DIRECTIONS; k++) {
         // ecriture dans un buffer permettant de factoriser l'appel MPI
-        mesh_to_process->buffer[(x - 1) * DIRECTIONS + k] =
-            &Mesh_get_cell(mesh_to_process, x, y)[k];
-        MPI_Send(mesh_to_process->buffer,
-                 DIRECTIONS * (mesh_to_process->width - 2), MPI_DOUBLE,
-                 target_rank, 0, MPI_COMM_WORLD);
+        mesh->buffer[(x - 1) * DIRECTIONS + k] =
+            Mesh_get_cell(mesh_to_process, x, y)[k];
+        MPI_Send(mesh->buffer, DIRECTIONS * (mesh_to_process->width - 2),
+                 MPI_DOUBLE, target_rank, 0, MPI_COMM_WORLD);
       }
     }
 #endif
@@ -262,12 +261,12 @@ void lbm_comm_sync_ghosts_vertical(lbm_comm_t *mesh, Mesh *mesh_to_process,
       }
     }
 #elif FACTORIZEDMPI
-    MPI_Recv(mesh_to_process->buffer, DIRECTIONS * (mesh_to_process->width - 2),
+    MPI_Recv(mesh->buffer, DIRECTIONS * (mesh_to_process->width - 2),
              MPI_DOUBLE, target_rank, 0, MPI_COMM_WORLD, &status);
     for (x = 1; x < mesh_to_process->width - 2; x++) {
       for (k = 0; k < DIRECTIONS; k++) {
-        &Mesh_get_cell(mesh_to_process, x, y)[k] =
-            mesh_to_process->buffer[(x - 1) * DIRECTIONS + k];
+        Mesh_get_cell(mesh_to_process, x, y)[k] =
+            mesh->buffer[(x - 1) * DIRECTIONS + k];
       }
     }
 #endif

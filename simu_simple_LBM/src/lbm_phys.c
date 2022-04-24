@@ -1,8 +1,8 @@
 /********************  HEADERS  *********************/
-#include "lbm_phys.h"
-#include "lbm_comm.h"
-#include "lbm_config.h"
-#include "lbm_struct.h"
+#include "../include/lbm_phys.h"
+#include "../include/lbm_comm.h"
+#include "../include/lbm_config.h"
+#include "../include/lbm_struct.h"
 #include <assert.h>
 #include <omp.h>
 #include <stdlib.h>

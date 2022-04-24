@@ -1,5 +1,5 @@
 /********************  HEADERS  *********************/
-#include "lbm_config.h"
+#include "../include/lbm_config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

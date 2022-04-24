@@ -2,6 +2,13 @@
 CC=gcc
 MPICC=mpicc
 #MPICC=vtcc -vtcc mpicc
+
+
+SRC=src
+TARGET_DIR=target
+INCLUDE=include
+
+
 RM=rm -f
 MAKEDEPEND=makedepend
 
@@ -14,7 +21,7 @@ TSPLIT=VERTICAL
 CCSPLIT=-D$(TSPLIT)
 
 TVERBOSE=VERBOSE
-TVERBOSE=NOVERBOSE
+#TVERBOSE=NOVERBOSE
 CCVERBOSE=-D$(TVERBOSE)
 
 TASSERT=ASSERT
@@ -44,8 +51,8 @@ CFLAGS=-Wall -g -O3 $(OPTI) $(AVX)
 LDFLAGS=-lm
 
 #Files
-LBM_SOURCES=main.c lbm_phys.c lbm_init.c lbm_struct.c lbm_comm.c lbm_config.c
-LBM_HEADERS=$(wildcards:*.h)
+LBM_SOURCES = $(SRC)/main.c $(SRC)/lbm_phys.c $(SRC)/lbm_init.c $(SRC)/lbm_struct.c $(SRC)/lbm_comm.c $(SRC)/lbm_config.c
+LBM_HEADERS=$(INCLUDE)/lbm_init.h $(INCLUDE)/lbm_phys.h $(INCLUDE)/lbm_config.h $(INCLUDE)/lbm_comm.h $(INCLUDE)/lbm_struct.h
 LBM_OBJECTS=$(LBM_SOURCES:.c=.o)
 
 TARGET=lbm display
@@ -58,15 +65,15 @@ all: $(TARGET)
 lbm: $(LBM_OBJECTS)
 	$(MPICC) $(CCALL) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-display: display.c
-	$(CC) $(CFLAGS) -o $@ display.c
+display: $(SRC)/display.c
+	$(CC) $(CFLAGS) -o $@ $(SRC)/display.c
 
 clean:
 	$(RM) $(LBM_OBJECTS)
 	$(RM) $(TARGET)
 
 depend:
-	$(MAKEDEPEND) -Y. $(LBM_SOURCES) display.c
+	$(MAKEDEPEND) -Y. $(LBM_SOURCES) $(SRC)/display.c
 
 .PHONY: clean all depend
 
