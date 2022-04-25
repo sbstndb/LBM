@@ -1,22 +1,27 @@
--DHORIZONTAL -DBARRIER -DNAIVEMPI
-213EE - 136175
-213EE - 136175
--DHORIZONTAL -DBARRIER -DFACTORIZEDMPI
-213EE - 136175
--DHORIZONTAL -DNOBARRIER -DNAIVEMPI
-213EE - 136175
-213EE - 136175
--DHORIZONTAL -DNOBARRIER -DFACTORIZEDMPI
-213EE - 136175
+iterations           = 5000
+width                = 800
+height               = 160
+#obstacle_r           = 
+#obstacle_x           = 
+#obstacle_y           = 
+reynolds             = 100
+inflow_max_velocity  = 0.100000
+inflow_max_velocity  = 0.100000
+output_filename      = resultat.raw
+write_interval       = 160
 -DVERTICAL -DBARRIER -DNAIVEMPI
-213EE - 136175
-21480 - 136320
+np : 2  time : 24  checksum : 213EE - 136175
+np : 4  time : 16  checksum : 213EE - 136175
+np : 8  time : 11  checksum : 213EE - 136175
+np : 16  time : 21  checksum : 213EE - 136175
 -DVERTICAL -DBARRIER -DFACTORIZEDMPI
-213EE - 136175
-213EE - 136175
+np : 2  time : 19  checksum : 213EE - 136175
+np : 4  time : 9  checksum : 213EE - 136175
+np : 8  time : 6  checksum : 213EE - 136175
+np : 16  time : 7  checksum : 213EE - 136175
 -DVERTICAL -DNOBARRIER -DNAIVEMPI
-213EE - 136175
-21480 - 136320
+np : 2  time : 13  checksum : 213EE - 136175
+np : 4  time : 0  checksum : 213EE - 136175
+np : 8  time : 0  checksum : 213EE - 136175
+np : 16  time : 1  checksum : 213EE - 136175
 -DVERTICAL -DNOBARRIER -DFACTORIZEDMPI
-213EE - 136175
-213EE - 136175

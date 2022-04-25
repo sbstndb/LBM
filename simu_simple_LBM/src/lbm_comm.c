@@ -111,8 +111,11 @@ void lbm_comm_init(lbm_comm_t *mesh_comm, int rank, int comm_size, int width,
   // if more than 1 on y, need transmission buffer
   if (nb_y > 1) {
     mesh_comm->buffer = malloc(sizeof(double) * DIRECTIONS * width / nb_x);
+    //    mesh_comm->buffer_bottom = malloc(sizeof(double) * DIRECTIONS * width
+    //    / nb_x)
   } else {
     mesh_comm->buffer = NULL;
+    //    mesh_comm->buffer_bottom = NULL;
   }
 
 // if debug print comm
@@ -147,7 +150,7 @@ void lbm_comm_release(lbm_comm_t *mesh_comm) {
 void lbm_comm_sync_ghosts_horizontal(lbm_comm_t *mesh, Mesh *mesh_to_process,
                                      lbm_comm_type_t comm_type, int target_rank,
                                      int x) {
-  // vars
+  //
   MPI_Status status;
 
   // if target is -1, no comm
@@ -157,9 +160,10 @@ void lbm_comm_sync_ghosts_horizontal(lbm_comm_t *mesh, Mesh *mesh_to_process,
   switch (comm_type) {
   case COMM_SEND:
 #if NAIVEMPI
+    // printf("hello from horizontal - send to %d\n", target_rank);
     for (int y = 0; y < mesh->height - 2; y++) {
-      MPI_Send(&Mesh_get_col(mesh_to_process, x)[y], DIRECTIONS, MPI_DOUBLE,
-               target_rank, 0, MPI_COMM_WORLD);
+      MPI_Send(&Mesh_get_col(mesh_to_process, x)[y * DIRECTIONS], DIRECTIONS,
+               MPI_DOUBLE, target_rank, y, MPI_COMM_WORLD);
     }
 #elif FACTORIZEDMPI
     MPI_Send(&Mesh_get_col(mesh_to_process, x)[0],
@@ -169,9 +173,10 @@ void lbm_comm_sync_ghosts_horizontal(lbm_comm_t *mesh, Mesh *mesh_to_process,
     break;
   case COMM_RECV:
 #if NAIVEMPI
+    // printf("hello from horizontal - recv from %d\n", target_rank);
     for (int y = 0; y < mesh->height - 2; y++) {
-      MPI_Recv(&Mesh_get_col(mesh_to_process, x)[y], DIRECTIONS, MPI_DOUBLE,
-               target_rank, 0, MPI_COMM_WORLD, &status);
+      MPI_Recv(&Mesh_get_col(mesh_to_process, x)[y * DIRECTIONS], DIRECTIONS,
+               MPI_DOUBLE, target_rank, y, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 #elif FACTORIZEDMPI
     MPI_Recv(&Mesh_get_col(mesh_to_process, x)[0],
@@ -234,6 +239,7 @@ void lbm_comm_sync_ghosts_vertical(lbm_comm_t *mesh, Mesh *mesh_to_process,
   switch (comm_type) {
   case COMM_SEND:
 #if NAIVEMPI
+    // printf("hello from vertical\n");
     for (x = 1; x < mesh_to_process->width - 2; x++) {
       for (k = 0; k < DIRECTIONS; k++) {
         MPI_Send(&Mesh_get_cell(mesh_to_process, x, y)[k], 1, MPI_DOUBLE,
@@ -246,10 +252,11 @@ void lbm_comm_sync_ghosts_vertical(lbm_comm_t *mesh, Mesh *mesh_to_process,
         // ecriture dans un buffer permettant de factoriser l'appel MPI
         mesh->buffer[(x - 1) * DIRECTIONS + k] =
             Mesh_get_cell(mesh_to_process, x, y)[k];
-        MPI_Send(mesh->buffer, DIRECTIONS * (mesh_to_process->width - 2),
-                 MPI_DOUBLE, target_rank, 0, MPI_COMM_WORLD);
       }
     }
+    MPI_Send(mesh->buffer, DIRECTIONS * (mesh_to_process->width - 2),
+             MPI_DOUBLE, target_rank, 0, MPI_COMM_WORLD);
+
 #endif
     break;
   case COMM_RECV:
@@ -361,6 +368,7 @@ void lbm_comm_ghost_exchange(lbm_comm_t *mesh, Mesh *mesh_to_process) {
   //  prevend comm mixing to avoid bugs
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
+#if USELESS
   // bottom left
   lbm_comm_sync_ghosts_diagonal(mesh, mesh_to_process, COMM_SEND,
                                 mesh->corner_id[CORNER_BOTTOM_LEFT], 1,
@@ -368,6 +376,7 @@ void lbm_comm_ghost_exchange(lbm_comm_t *mesh, Mesh *mesh_to_process) {
   lbm_comm_sync_ghosts_diagonal(mesh, mesh_to_process, COMM_RECV,
                                 mesh->corner_id[CORNER_TOP_RIGHT],
                                 mesh->width - 1, 0);
+#endif
 
 #if BARRIER
   // prevend comm mixing to avoid bugs
@@ -385,7 +394,7 @@ void lbm_comm_ghost_exchange(lbm_comm_t *mesh, Mesh *mesh_to_process) {
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-#if NOUSELESS
+#if USELESS
   // Right to left phase : on reçoit à gauche et on envoie depuis la droite
   lbm_comm_sync_ghosts_horizontal(mesh, mesh_to_process, COMM_SEND,
                                   mesh->left_id, 1);
