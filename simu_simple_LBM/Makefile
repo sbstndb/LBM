@@ -1,6 +1,7 @@
 #Commands
 CC=gcc
 MPICC=mpicc
+#MPICC=mpc_cc
 #MPICC=vtcc -vtcc mpicc
 
 
@@ -33,7 +34,7 @@ TBARRIER=NOBARRIER
 CCBARRIER=-D$(TBARRIER)
 
 TMPI=NAIVEMPI
-#TMPI=FACTORIZEDMPI
+TMPI=FACTORIZEDMPI
 CCMPI = -D$(TMPI)
 
 CCALL = $(CCUSELESSPART) $(CCSPLIT) $(CCVERBOSE) $(CCASSERT) $(CCBARRIER) $(CCMPI)
@@ -47,7 +48,7 @@ OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vector
 
 
 #flags
-CFLAGS=-Wall -g -O3 $(OPTI) $(AVX)
+CFLAGS=-Wall -g -O2 $(OPTI) $(AVX)
 LDFLAGS=-lm
 
 #Files
