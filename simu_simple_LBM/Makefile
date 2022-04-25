@@ -1,6 +1,7 @@
 #Commands
 CC=gcc
 MPICC=mpicc
+#MPICC=mpc_cc
 #MPICC=vtcc -vtcc mpicc
 
 
@@ -57,6 +58,7 @@ OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vector
 
 CFLAGS=-Wall -g $(GENERAL_OPTI) $(OPTI) $(AVX)
 LDFLAGS=-lm -fopenmp
+
 
 #Files
 LBM_SOURCES = $(SRC)/main.c $(SRC)/lbm_phys.c $(SRC)/lbm_init.c $(SRC)/lbm_struct.c $(SRC)/lbm_comm.c $(SRC)/lbm_config.c
