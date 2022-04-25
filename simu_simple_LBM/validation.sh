@@ -8,8 +8,8 @@ CONFIG=$(cat config_verification.txt)
 echo "$CONFIG" >>verification.log
 
 VERBOSE="-DNOVERBOSE"
-#orientation_arr=("-DHORIZONTAL" "-DVERTICAL")
-orientation_arr=("-DVERTICAL")
+orientation_arr=("-DHORIZONTAL" "-DVERTICAL")
+#orientation_arr=("-DVERTICAL")
 barrier_arr=("-DBARRIER" "-DNOBARRIER")
 MPI_arr=("-DNAIVEMPI" "-DFACTORIZEDMPI")
 for ORIENTATION in "${orientation_arr[@]}"; do
@@ -17,7 +17,7 @@ for ORIENTATION in "${orientation_arr[@]}"; do
 		for MPI in "${MPI_arr[@]}"; do
 			echo "$ORIENTATION $HAVEBARRIER $MPI" >>verification.log
 			make clean && make CCSPLIT=$ORIENTATION CCBARRIER=$HAVEBARRIER CCMPI=$MPI CCVERBOSE=$VERBOSE -j
-			for rank in 2 4 8 16; do
+			for rank in 1 2 4; do
 				#echo "np : $rank" >>verification.log
 				START_TIME=$SECONDS
 				mpirun -np $rank ./lbm config_verification.txt
