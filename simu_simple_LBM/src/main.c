@@ -11,6 +11,19 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+static inline uint64_t fenced_rdtscp() {
+  uint64_t tsc;
+  asm volatile("rdtscp                  \n\t"
+               "lfence                  \n\t"
+               "shl     $0x20, %%rdx    \n\t"
+               "or      %%rdx, %%rax    \n\t"
+               : "=a"(tsc)
+               :
+               : "rdx", "rcx");
+  return tsc;
+}
 
 /*******************  FUNCTION  *********************/
 /**
@@ -160,6 +173,11 @@ int main(int argc, char *argv[]) {
   // barrier to wait all before start
   MPI_Barrier(MPI_COMM_WORLD);
 
+  // clocks
+  struct timespec start_clock, stop_clock;
+  clock_gettime(CLOCK_MONOTONIC, &start_clock);
+  uint64_t start_tick, stop_tick, total_tick, average_total_tick;
+  start_tick = fenced_rdtscp();
   // time steps
   for (i = 1; i < ITERATIONS; i++) {
 #if VERBOSE
@@ -194,6 +212,40 @@ int main(int argc, char *argv[]) {
     // save step
     if (i % WRITE_STEP_INTERVAL == 0 && lbm_gbl_config.output_filename != NULL)
       save_frame_all_domain(fp, &mesh, &temp_render);
+  }
+  stop_tick = fenced_rdtscp();
+  total_tick = (uint64_t)((stop_tick - start_tick) / (ITERATIONS));
+  clock_gettime(CLOCK_MONOTONIC, &stop_clock);
+  uint64_t total_clock_nsec;
+  double iteration_clock_msec, total_clock_sec, average_iteration_clock_msec,
+      average_total_clock_sec;
+  total_clock_nsec = 1000000000 * (stop_clock.tv_sec - start_clock.tv_sec) +
+                     stop_clock.tv_nsec - start_clock.tv_nsec;
+  iteration_clock_msec =
+      (double)(total_clock_nsec / (double)(ITERATIONS * 1000000.0));
+  total_clock_sec = (double)(total_clock_nsec / 1000000000.0);
+#if VERBOSE
+  printf("Total tick from rank %d : %lu\n", rank, total_tick);
+  printf("Total elapsed time from rank %d  :\n  (s)  : %f\n", rank,
+         total_clock_sec);
+  printf("Iteration elapsed time from rank %d : \n (ms) : %f\n", rank,
+         iteration_clock_msec);
+
+#endif
+  //
+  MPI_Reduce(&total_tick, &average_total_tick, 1, MPI_UNSIGNED_LONG_LONG,
+             MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&total_clock_sec, &average_total_clock_sec, 1, MPI_DOUBLE, MPI_SUM,
+             0, MPI_COMM_WORLD);
+  MPI_Reduce(&iteration_clock_msec, &average_iteration_clock_msec, 1,
+             MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  if (rank == 0) {
+    average_total_tick = (uint64_t)(average_total_tick / comm_size);
+    average_total_clock_sec = (average_total_clock_sec / (double)comm_size);
+    average_iteration_clock_msec =
+        (average_iteration_clock_msec / (double)comm_size);
+    printf("\nAverage tick : %lu\nAverage iteration time : %f (ms)\n\n",
+           average_total_tick, average_iteration_clock_msec);
   }
 
   if (rank == RANK_MASTER && fp != NULL) {

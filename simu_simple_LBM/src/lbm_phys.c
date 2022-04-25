@@ -120,10 +120,11 @@ double compute_equilibrium_profile(Vector velocity, double density,
   double feq;
 
   // velocity norme 2 (v * v)
-  v2 = get_vect_norme_2(velocity, velocity);
 
   // calc e_i * v_i / c
   p = get_vect_norme_2(direction_matrix[direction], velocity);
+
+  v2 = get_vect_norme_2(velocity, velocity);
   p2 = p * p;
 
   // terms without density and direction weight
@@ -284,6 +285,7 @@ void special_cells(Mesh *mesh, lbm_mesh_type_t *mesh_type,
   int i, j;
 
   // loop on all inner cells
+#pragma omp parallel for schedule(static)
   for (i = 1; i < mesh->width - 1; i++) {
     for (j = 1; j < mesh->height - 1; j++) {
       switch (*(lbm_cell_type_t_get_cell(mesh_type, i, j))) {
@@ -311,18 +313,31 @@ void special_cells(Mesh *mesh, lbm_mesh_type_t *mesh_type,
  **/
 void collision(Mesh *mesh_out, const Mesh *mesh_in) {
   // vars
-  int i, j;
 
 #if ASSERT
   // errors
   assert(mesh_in->width == mesh_out->width);
   assert(mesh_in->height == mesh_out->height);
 #endif
+
+#if STANDARDLOOP
   // loop on all inner cells
-  for (j = 1; j < mesh_in->height - 1; j++)
-    for (i = 1; i < mesh_in->width - 1; i++)
+#pragma omp parallel for schedule(static)
+  for (int j = 1; j < mesh_in->height - 1; j++) {
+    for (int i = 1; i < mesh_in->width - 1; i++) {
       compute_cell_collision(Mesh_get_cell(mesh_out, i, j),
                              Mesh_get_cell(mesh_in, i, j));
+    }
+  }
+#elif OPTIMIZEDLOOP
+#pragma omp parallel for schedule(static)
+  for (int i = 1; i < mesh_in->width - 1; i++) {
+    for (int j = 1; j < mesh_in->height - 1; j++) {
+      compute_cell_collision(Mesh_get_cell(mesh_out, i, j),
+                             Mesh_get_cell(mesh_in, i, j));
+    }
+  }
+#endif
 }
 
 /*******************  FUNCTION  *********************/
@@ -333,14 +348,32 @@ void collision(Mesh *mesh_out, const Mesh *mesh_in) {
  **/
 void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
   // vars
-  int i, j, k;
   int ii, jj;
 
   // loop on all cells
-  for (j = 0; j < mesh_out->height; j++) {
-    for (i = 0; i < mesh_out->width; i++) {
+#if STANDARDLOOP
+#pragma omp parallel for schedule(static)
+  for (int j = 0; j < mesh_out->height; j++) {
+    for (int i = 0; i < mesh_out->width; i++) {
       // for all direction
-      for (k = 0; k < DIRECTIONS; k++) {
+      for (int k = 0; k < DIRECTIONS; k++) {
+        // compute destination point
+        ii = (i + direction_matrix[k][0]);
+        jj = (j + direction_matrix[k][1]);
+        // propagate to neighboor nodes
+        if ((ii >= 0 && ii < mesh_out->width) &&
+            (jj >= 0 && jj < mesh_out->height)) {
+          Mesh_get_cell(mesh_out, ii, jj)[k] = Mesh_get_cell(mesh_in, i, j)[k];
+        }
+      }
+    }
+  }
+#elif OPTIMIZEDLOOP
+#pragma omp parallel for schedule(static)
+  for (int i = 0; i < mesh_out->width; i++) {
+    for (int j = 0; j < mesh_out->height; j++) {
+      // for all direction
+      for (int k = 0; k < DIRECTIONS; k++) {
         // compute destination point
         ii = (i + direction_matrix[k][0]);
         jj = (j + direction_matrix[k][1]);
@@ -351,4 +384,5 @@ void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
       }
     }
   }
+#endif
 }

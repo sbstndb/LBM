@@ -21,7 +21,7 @@ TSPLIT=VERTICAL
 CCSPLIT=-D$(TSPLIT)
 
 TVERBOSE=VERBOSE
-#TVERBOSE=NOVERBOSE
+TVERBOSE=NOVERBOSE
 CCVERBOSE=-D$(TVERBOSE)
 
 TASSERT=ASSERT
@@ -32,12 +32,19 @@ TBARRIER=NOBARRIER
 #TBARRIER=BARRIER
 CCBARRIER=-D$(TBARRIER)
 
+TMPI=NOMPI
 TMPI=NAIVEMPI
-#TMPI=FACTORIZEDMPI
+TMPI=FACTORIZEDMPI
 CCMPI = -D$(TMPI)
 
-CCALL = $(CCUSELESSPART) $(CCSPLIT) $(CCVERBOSE) $(CCASSERT) $(CCBARRIER) $(CCMPI)
+TORDER=STANDARDLOOP
+TORDER=OPTIMIZEDLOOP
+CCORDER=-D$(TORDER)
 
+CCALL = $(CCUSELESSPART) $(CCSPLIT) $(CCVERBOSE) $(CCASSERT) $(CCBARRIER) $(CCMPI) $(CCORDER)
+
+
+GENERAL_OPTI=-Ofast
 
 AVX=-mavx512
 AVX=-mavx2
@@ -47,8 +54,9 @@ OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vector
 
 
 #flags
-CFLAGS=-Wall -g -O3 $(OPTI) $(AVX)
-LDFLAGS=-lm
+
+CFLAGS=-Wall -g $(GENERAL_OPTI) $(OPTI) $(AVX)
+LDFLAGS=-lm -fopenmp
 
 #Files
 LBM_SOURCES = $(SRC)/main.c $(SRC)/lbm_phys.c $(SRC)/lbm_init.c $(SRC)/lbm_struct.c $(SRC)/lbm_comm.c $(SRC)/lbm_config.c
@@ -60,7 +68,7 @@ TARGET=lbm display
 all: $(TARGET)
 
 %.o: %.c
-	$(MPICC) $(CCALL) $(CFLAGS) -c -o $@ $<
+	$(MPICC) $(CCALL) $(CFLAGS) -c -o $@ $< $(LDFLAGS)
 
 lbm: $(LBM_OBJECTS)
 	$(MPICC) $(CCALL) $(CFLAGS) -o $@ $^ $(LDFLAGS)
