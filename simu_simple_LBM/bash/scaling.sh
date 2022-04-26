@@ -1,3 +1,14 @@
+MACHINE=ASUS
+MACHINE=RYZEN
+MACHINE=THREADRIPPER
+MACHINE=RUCHE
+
+STRINGCONFIGX="config_scaling/config_scaling_x_"
+STRINGCONFIGY="config_scaling/config_scaling_y_"
+STRINGTXT=".txt"
+
+STRINGCONFIG=("config_scaling/config_scaling_x_" "config_scaling/config_scaling_y_")
+
 # load spack
 echo "$(tput setaf 3)Loading spack modules ...$(tput setaf 0)"
 . ~/spack/share/spack/setup-env.sh
@@ -63,28 +74,75 @@ function strong_scaling_OMP() {
 	done
 }
 
+################# FUNCTION WEAK SCALING #########################
+#weak_scaling_MPI $NODE $THREAD_PER_NODE
+function weak_scaling_MPI() {
+	echo "$(tput setaf 1)--> Weak scaling MPI$(tput setaf 2)"
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	for DIRECTION in "${STRINGCONFIG[@]}"; do
+		for ((NUM_NODE = 1; NUM_NODE <= $1; NUM_NODE = NUM_NODE * 2)); do
+			NUM_THREAD=$2
+			FILE=$DIRECTION$NUM_NODE$STRINGTXT
+			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE"
+			export OMP_NUM_THREADS=$NUM_THREAD
+			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average"
+		done
+	done
+}
+
+#weak_scaling_OMP $NODE $THREAD_PER_NODE
+function weak_scaling_OMP() {
+	echo "$(tput setaf 1)--> Weak scaling OMP$(tput setaf 2)"
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	for DIRECTION in "${STRINGCONFIG[@]}"; do
+
+		for ((NUM_THREAD = 1; NUM_THREAD <= $2; NUM_THREAD = NUM_THREAD * 2)); do
+			NUM_NODE=$1
+			FILE=$DIRECTION$NUM_THREAD$STRINGTXT
+
+			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE"
+			export OMP_NUM_THREADS=$NUM_THREAD
+			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average"
+		done
+	done
+}
+
+################### STRONG SCALING ################
 echo " "
 echo "$(tput setaf 1)--- Base code ---$(tput setaf 0)"
 build_base
 
 NODE=$MAX_NODE
 THREAD_PER_NODE=1
-strong_scaling_MPI $NODE $THREAD_PER_NODE
+#strong_scaling_MPI $NODE $THREAD_PER_NODE
 
 NODE=1
 THREAD_PER_NODE=$MAX_THREAD_PER_NODE
-strong_scaling_OMP $NODE $THREAD_PER_NODE
+#strong_scaling_OMP $NODE $THREAD_PER_NODE
 
 echo " "
 echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)"
 build_optimized
 NODE=$MAX_NODE
 THREAD_PER_NODE=1
-strong_scaling_MPI $NODE $THREAD_PER_NODE
+#strong_scaling_MPI $NODE $THREAD_PER_NODE
 
 NODE=1
 THREAD_PER_NODE=$MAX_THREAD_PER_NODE
-strong_scaling_OMP $NODE $THREAD_PER_NODE
+#strong_scaling_OMP $NODE $THREAD_PER_NODE
+
+############# WEAK SCALING ###############
+echo " "
+echo "$(tput setaf 1)--- Base code --$(tput setaf 0)"
+build_base
+
+NODE=$MAX_NODE
+THREAD_PER_NODE=1
+weak_scaling_MPI $NODE $THREAD_PER_NODE
+
+NODE=1
+THREAD_PER_NODE=$MAX_THREAD_PER_NODE
+weak_scaling_OMP $NODE $THREAD_PER_NODE
 
 #rm verification.log
 
