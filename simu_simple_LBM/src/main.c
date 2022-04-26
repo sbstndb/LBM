@@ -210,8 +210,10 @@ int main(int argc, char *argv[]) {
 #endif
 
     // save step
+#if SAVEFILE
     if (i % WRITE_STEP_INTERVAL == 0 && lbm_gbl_config.output_filename != NULL)
       save_frame_all_domain(fp, &mesh, &temp_render);
+#endif
   }
   stop_tick = fenced_rdtscp();
   total_tick = (uint64_t)((stop_tick - start_tick) / (ITERATIONS));

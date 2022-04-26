@@ -151,8 +151,9 @@ void lbm_comm_sync_ghosts_horizontal(lbm_comm_t *mesh, Mesh *mesh_to_process,
                                      lbm_comm_type_t comm_type, int target_rank,
                                      int x) {
   //
+#if FACTORIZEDMPI
   MPI_Status status;
-
+#endif
   // if target is -1, no comm
   if (target_rank == -1)
     return;
