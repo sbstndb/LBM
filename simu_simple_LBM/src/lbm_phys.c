@@ -284,7 +284,7 @@ void special_cells(Mesh *mesh, lbm_mesh_type_t *mesh_type,
   // vars
   int i, j;
 
-  // loop on all inner cells
+// loop on all inner cells
 #pragma omp parallel for schedule(static)
   for (i = 1; i < mesh->width - 1; i++) {
     for (j = 1; j < mesh->height - 1; j++) {

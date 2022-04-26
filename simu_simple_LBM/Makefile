@@ -59,7 +59,7 @@ OPTI=
 OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vectorize -ftree-loop-vectorize 
 
 
-#flags
+#-fsanitize=address
 
 CFLAGS=-Wall -g $(GENERAL_OPTI) $(OPTI) $(AVX)
 LDFLAGS=-lm -fopenmp
