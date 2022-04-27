@@ -19,9 +19,9 @@ make clean >>/dev/null && make -j >>/dev/null
 echo "$(tput setaf 2)Done !$(tput setaf 5)"
 
 ##### CONFIGURATON ####
-MAX_NODE=4            #
-MAX_THREAD_PER_NODE=4 #
-TOTAL_CPU=4           #
+MAX_NODE=8            #
+MAX_THREAD_PER_NODE=8 #
+TOTAL_CPU=8           #
 #######################
 
 #thread * node = cpu --> thread = cpu / node

@@ -62,7 +62,7 @@ OPTI=-funroll-loops -mtune=native -march=native -finline-functions -ftree-vector
 #-fsanitize=address
 
 CFLAGS=-Wall -g $(GENERAL_OPTI) $(OPTI) $(AVX)
-LDFLAGS=-lm -fopenmp
+LDFLAGS=-lm -fopenmp 
 
 
 #Files
