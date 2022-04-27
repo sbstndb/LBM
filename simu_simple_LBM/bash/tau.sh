@@ -13,9 +13,12 @@ echo -e "\e[31mTracing ...\e[0m"
 export TAU_TRACE=1
 mpirun -np 2 tau_exec ./lbm
 
-echo -e "\e[31mMerge traces ...\e[0m"
+echo -e "\e[31mMerge traces for Jumpshot ...\e[0m"
 tau_treemerge.pl
 tau2slog2 tau.trc tau.edf -o tau.slog2
+
+echo -e "\e[31mMerge traces for Vampir ...\e[0m"
+tau2otf2 tau.trc tau.edf output_vampir
 
 #echo "Papi ..."
 #papi_avail
