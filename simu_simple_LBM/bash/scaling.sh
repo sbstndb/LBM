@@ -3,20 +3,24 @@ MACHINE=RYZEN
 MACHINE=THREADRIPPER
 MACHINE=RUCHE
 
-STRINGCONFIGX="config_scaling/config_scaling_x_"
-STRINGCONFIGY="config_scaling/config_scaling_y_"
+FOLDER="scaling"
+LOG="scaling.log"
+echo "--- SCALING.sh ---" | tee $FOLDER/$LOG
+
+STRINGCONFIGX="scaling/file/config_scaling_x_"
+STRINGCONFIGY="scaling/file/config_scaling_y_"
 STRINGTXT=".txt"
 
-STRINGCONFIG=("config_scaling/config_scaling_x_" "config_scaling/config_scaling_y_")
+STRINGCONFIG=("scaling/file/config_scaling_x_" "scaling/file/config_scaling_y_")
 
 # load spack
-echo "$(tput setaf 3)Loading spack modules ...$(tput setaf 0)"
+echo "$(tput setaf 3)Loading spack modules ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
 . ~/spack/share/spack/setup-env.sh
 spack load intel-oneapi-mpi
-echo "$(tput setaf 2)Done !$(tput setaf 0)"
-echo "$(tput setaf 3)Building executable ...$(tput setaf 0)"
+echo "$(tput setaf 2)Done !$(tput setaf 0)" | tee -a $FOLDER/$LOG
+echo "$(tput setaf 3)Building executable ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
 make clean >>/dev/null && make -j >>/dev/null
-echo "$(tput setaf 2)Done !$(tput setaf 5)"
+echo "$(tput setaf 2)Done !$(tput setaf 5)" | tee -a $FOLDER/$LOG
 
 ##### CONFIGURATON ####
 MAX_NODE=8            #
@@ -25,91 +29,91 @@ TOTAL_CPU=8           #
 #######################
 
 #thread * node = cpu --> thread = cpu / node
-echo "Configuration : "
-echo "           -->  NODE         : $MAX_NODE"
-echo "           -->  TOTAL CPU    : $TOTAL_CPU"
-echo "           -->  CPU PER NODE : $MAX_THREAD_PER_NODE"
+echo "Configuration : " | tee -a $FOLDER/$LOG
+echo "           -->  NODE         : $MAX_NODE" | tee -a $FOLDER/$LOG
+echo "           -->  TOTAL CPU    : $TOTAL_CPU" | tee -a $FOLDER/$LOG
+echo "           -->  CPU PER NODE : $MAX_THREAD_PER_NODE" | tee -a $FOLDER/$LOG
 echo " "
 
 ################ FUNCTION COMPILATION  #######################3
 function build_base() {
 
-	echo "$(tput setaf 3)Building executable ...$(tput setaf 0)"
+	echo "$(tput setaf 3)Building executable ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
 	make clean >>/dev/null && make CCUSELESSPART="-DUSELESSPART" CCSPLIT="-DHORIZONTAL" CCVERBOSE="-DNOVERBOSE" CCSAVEFILE="-DNOSAVEFILE" CCASSERT="-DASSERT" CCBARRIER="-DBARRIER" CCMPI="-DNAIVEMPI" CCORDER="-DSTANDARDLOOP" -j >>/dev/null
-	echo "$(tput setaf 2)Done !$(tput setaf 5)"
+	echo "$(tput setaf 2)Done !$(tput setaf 5)" | tee -a $FOLDER/$LOG
 
 }
 
 function build_optimized() {
 
-	echo "$(tput setaf 3)Building executable ...$(tput setaf 0)"
+	echo "$(tput setaf 3)Building executable ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
 	make clean >>/dev/null && make CCUSELESSPART="-DNOUSELESSPART" CCSPLIT="-DVERTICAL" CCVERBOSE="-DNOVERBOSE" CCSAVEFILE="-DNOSAVEFILE" CCASSERT="-DNOASSERT" CCBARRIER="-DNOBARRIER" CCMPI="-DFACTORIZEDMPI" CCORDER="-DOPTIMIZEDLOOP" -j >>/dev/null
-	echo "$(tput setaf 2)Done !$(tput setaf 5)"
+	echo "$(tput setaf 2)Done !$(tput setaf 5)" | tee -a $FOLDER/$LOG
 
 }
 
 ################3 FUNCTION STRONG SCALIng ##########################3
 # strong_scaling_MPI $NODE $THREAD_PER_NODE
 function strong_scaling_MPI() {
-	echo "$(tput setaf 1)--> Strong scaling MPI$(tput setaf 2)"
-	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	echo "$(tput setaf 1)--> Strong scaling MPI$(tput setaf 2)" | tee -a $FOLDER/$LOG
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes" | tee -a $FOLDER/$LOG
 
 	for ((NUM_NODE = 1; NUM_NODE <= $1; NUM_NODE = NUM_NODE * 2)); do
 		NUM_THREAD=$2
-		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)"
+		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)" | tee -a $FOLDER/$LOG
 		export OMP_NUM_THREADS=$NUM_THREAD
-		mpirun -np $NUM_NODE ./lbm | grep "Average"
+		mpirun -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
 	done
 }
 
 # string_scaling_OMP $NODE $THREAD_PER_NODE
 function strong_scaling_OMP() {
-	echo "$(tput setaf 1)--> Strong scaling OMP$(tput setaf 2)"
-	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	echo "$(tput setaf 1)--> Strong scaling OMP$(tput setaf 2)" | tee -a $FOLDER/$LOG
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes" | tee -a $FOLDER/$LOG
 	for ((NUM_THREAD = 1; NUM_THREAD <= $2; NUM_THREAD = NUM_THREAD * 2)); do
 		NUM_NODE=$1
-		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)"
+		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)" | tee -a $FOLDER/$LOG
 		export OMP_NUM_THREADS=$NUM_THREAD
-		mpirun -np $NUM_NODE ./lbm | grep "Average"
+		mpirun -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
 	done
 }
 
 ################# FUNCTION WEAK SCALING #########################
 #weak_scaling_MPI $NODE $THREAD_PER_NODE
 function weak_scaling_MPI() {
-	echo "$(tput setaf 1)--> Weak scaling MPI$(tput setaf 2)"
-	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	echo "$(tput setaf 1)--> Weak scaling MPI$(tput setaf 2)" | tee -a $FOLDER/$LOG
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes" | tee -a $FOLDER/$LOG
 	for DIRECTION in "${STRINGCONFIG[@]}"; do
 		for ((NUM_NODE = 1; NUM_NODE <= $1; NUM_NODE = NUM_NODE * 2)); do
 			NUM_THREAD=$2
 			FILE=$DIRECTION$NUM_NODE$STRINGTXT
-			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE"
+			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE" | tee -a $FOLDER/$LOG
 			export OMP_NUM_THREADS=$NUM_THREAD
-			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average"
+			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$LOG
 		done
 	done
 }
 
 #weak_scaling_OMP $NODE $THREAD_PER_NODE
 function weak_scaling_OMP() {
-	echo "$(tput setaf 1)--> Weak scaling OMP$(tput setaf 2)"
-	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes"
+	echo "$(tput setaf 1)--> Weak scaling OMP$(tput setaf 2)" | tee -a $FOLDER/$LOG
+	echo "$(tput setaf 5)Running with $1 max nodes and $2 max threads per nodes" | tee -a $FOLDER/$LOG
 	for DIRECTION in "${STRINGCONFIG[@]}"; do
 
 		for ((NUM_THREAD = 1; NUM_THREAD <= $2; NUM_THREAD = NUM_THREAD * 2)); do
 			NUM_NODE=$1
 			FILE=$DIRECTION$NUM_THREAD$STRINGTXT
 
-			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE"
+			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE" | tee -a $FOLDER/$LOG
 			export OMP_NUM_THREADS=$NUM_THREAD
-			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average"
+			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$log
 		done
 	done
 }
 
 ################### STRONG SCALING ################
-echo " "
-echo "$(tput setaf 1)--- Base code ---$(tput setaf 0)"
+echo " " | tee -a $FOLDER/$LOG
+echo "$(tput setaf 1)--- Base code ---$(tput setaf 0)" | tee -a $FOLDER/$LOG
 build_base
 
 NODE=$MAX_NODE
@@ -120,8 +124,8 @@ NODE=1
 THREAD_PER_NODE=$MAX_THREAD_PER_NODE
 strong_scaling_OMP $NODE $THREAD_PER_NODE
 
-echo " "
-echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)"
+echo " " | tee -a $FOLDER/$LOG
+echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)" | tee -a $FOLDER/$LOG
 build_optimized
 NODE=$MAX_NODE
 THREAD_PER_NODE=1
@@ -132,8 +136,8 @@ THREAD_PER_NODE=$MAX_THREAD_PER_NODE
 strong_scaling_OMP $NODE $THREAD_PER_NODE
 
 ############# WEAK SCALING ###############
-echo " "
-echo "$(tput setaf 1)--- Base code --$(tput setaf 0)"
+echo " " | tee -a $FOLDER/$LOG
+echo "$(tput setaf 1)--- Base code --$(tput setaf 0)" | tee -a $FOLDER/$LOG
 build_base
 
 NODE=$MAX_NODE
@@ -144,8 +148,8 @@ NODE=1
 THREAD_PER_NODE=$MAX_THREAD_PER_NODE
 weak_scaling_OMP $NODE $THREAD_PER_NODE
 
-echo " "
-echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)"
+echo " " | tee -a $FOLDER/$LOG
+echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)" | tee -a $FOLDER/$LOG
 build_optimized
 
 NODE=$MAX_NODE

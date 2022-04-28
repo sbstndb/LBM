@@ -1,0 +1,69 @@
+--- VALIDATION.SH ---
+[35mCompilation flags : -DHORIZONTAL -DNOBARRIER -DNAIVEMPI -DOPTIMIZEDLOOP
+[32mOMP_NUM_THREADS : 1
+[32mnp : 1[31m
+np : 1  time : 20  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 1[31m
+np : 1  time : 11  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 1
+[32mnp : 2[31m
+np : 2  time : 227  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 2[31m
+np : 2  time : 227  checksum : 213EE - 136175
+ 
+[35mCompilation flags : -DHORIZONTAL -DNOBARRIER -DFACTORIZEDMPI -DOPTIMIZEDLOOP
+[32mOMP_NUM_THREADS : 1
+[32mnp : 1[31m
+np : 1  time : 20  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 1[31m
+np : 1  time : 10  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 1
+[32mnp : 2[31m
+np : 2  time : 10  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 2[31m
+np : 2  time : 6  checksum : 213EE - 136175
+ 
+[35mCompilation flags : -DVERTICAL -DNOBARRIER -DNAIVEMPI -DOPTIMIZEDLOOP
+[32mOMP_NUM_THREADS : 1
+[32mnp : 1[31m
+np : 1  time : 21  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 1[31m
+np : 1  time : 10  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 1
+[32mnp : 2[31m
+np : 2  time : 16  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 2[31m
+np : 2  time : 11  checksum : 213EE - 136175
+ 
+[35mCompilation flags : -DVERTICAL -DNOBARRIER -DFACTORIZEDMPI -DOPTIMIZEDLOOP
+[32mOMP_NUM_THREADS : 1
+[32mnp : 1[31m
+np : 1  time : 20  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 1[31m
+np : 1  time : 11  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 1
+[32mnp : 2[31m
+np : 2  time : 10  checksum : 213EE - 136175
+ 
+[32mOMP_NUM_THREADS : 2
+[32mnp : 2[31m
+np : 2  time : 6  checksum : 213EE - 136175
+ 
