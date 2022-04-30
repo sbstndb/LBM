@@ -6,5 +6,8 @@ echo -e "\e[31mLoading spack - tau ...\e[0m"
 . ~/spack/share/spack/setup-env.sh
 spack load tau
 
+
+cd tau
+
 echo -e "\e[31mLaunching pProf ...\e[0m"
 pprof -s

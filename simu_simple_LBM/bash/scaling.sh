@@ -16,6 +16,7 @@ STRINGCONFIG=("scaling/file/config_scaling_x_" "scaling/file/config_scaling_y_")
 # load spack
 echo "$(tput setaf 3)Loading spack modules ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
 . ~/spack/share/spack/setup-env.sh
+spack load mpich ## if u dont have oneapi-mpi !!
 spack load intel-oneapi-mpi
 echo "$(tput setaf 2)Done !$(tput setaf 0)" | tee -a $FOLDER/$LOG
 echo "$(tput setaf 3)Building executable ...$(tput setaf 0)" | tee -a $FOLDER/$LOG
@@ -23,9 +24,9 @@ make clean >>/dev/null && make -j >>/dev/null
 echo "$(tput setaf 2)Done !$(tput setaf 5)" | tee -a $FOLDER/$LOG
 
 ##### CONFIGURATON ####
-MAX_NODE=8            #
-MAX_THREAD_PER_NODE=8 #
-TOTAL_CPU=8           #
+MAX_NODE=32            #
+MAX_THREAD_PER_NODE=32 #
+TOTAL_CPU=32           #
 #######################
 
 #thread * node = cpu --> thread = cpu / node
@@ -62,7 +63,7 @@ function strong_scaling_MPI() {
 		NUM_THREAD=$2
 		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)" | tee -a $FOLDER/$LOG
 		export OMP_NUM_THREADS=$NUM_THREAD
-		mpirun -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
+		mpiexec --bind-to=core -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
 	done
 }
 
@@ -74,7 +75,7 @@ function strong_scaling_OMP() {
 		NUM_NODE=$1
 		echo "$(tput setaf 3)NODE : $NUM_NODE , THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2)" | tee -a $FOLDER/$LOG
 		export OMP_NUM_THREADS=$NUM_THREAD
-		mpirun -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
+		mpiexec --bind-to=machine -np $NUM_NODE ./lbm | grep "Average" | tee -a $FOLDER/$LOG
 	done
 }
 
@@ -89,7 +90,7 @@ function weak_scaling_MPI() {
 			FILE=$DIRECTION$NUM_NODE$STRINGTXT
 			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE" | tee -a $FOLDER/$LOG
 			export OMP_NUM_THREADS=$NUM_THREAD
-			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$LOG
+			mpiexec --bind-to=core -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$LOG
 		done
 	done
 }
@@ -106,7 +107,7 @@ function weak_scaling_OMP() {
 
 			echo "$(tput setaf 3)NODE : $NUM_NODE, THREAD_PER_NODE : $NUM_THREAD$(tput setaf 2), FILE : $FILE" | tee -a $FOLDER/$LOG
 			export OMP_NUM_THREADS=$NUM_THREAD
-			mpirun -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$log
+			mpiexec --bind-to=machine -np $NUM_NODE ./lbm $FILE | grep "Average" | tee -a $FOLDER/$LOG
 		done
 	done
 }

@@ -18,7 +18,7 @@ orientation_arr=("-DHORIZONTAL" "-DVERTICAL")
 barrier_arr=("-DNOBARRIER")
 MPI_arr=("-DNAIVEMPI" "-DFACTORIZEDMPI")
 loop_arr=("-DOPTIMIZEDLOOP")
-#loop_arr=("-DSTANDARDLOOP" "-DOPTIMIZEDLOOP")
+loop_arr=("-DSTANDARDLOOP" "-DOPTIMIZEDLOOP")
 for ORIENTATION in "${orientation_arr[@]}"; do
 	for HAVEBARRIER in "${barrier_arr[@]}"; do
 		for MPI in "${MPI_arr[@]}"; do
@@ -27,8 +27,8 @@ for ORIENTATION in "${orientation_arr[@]}"; do
 				echo "$(tput setaf 5)Compilation flags : $ORIENTATION $HAVEBARRIER $MPI $LOOP" | tee -a $VALIDATION_FOLDER/$LOG
 				make clean >/dev/null
 				make CCSPLIT=$ORIENTATION CCBARRIER=$HAVEBARRIER CCMPI=$MPI CCVERBOSE=$VERBOSE CCORDER=$LOOP -j >/dev/null
-				for rank in 1 2; do
-					for OMP_NUM in 1 2; do
+				for rank in 1 8; do
+					for OMP_NUM in 1 8; do
 						#OMP_NUM_THREADS=$((4 / $rank))
 						#echo "OMP_NUM_THREADS : $OMP_NUM_THREADS"
 						export OMP_NUM_THREADS=$OMP_NUM

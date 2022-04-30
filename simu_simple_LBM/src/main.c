@@ -173,11 +173,14 @@ int main(int argc, char *argv[]) {
   // barrier to wait all before start
   MPI_Barrier(MPI_COMM_WORLD);
 
+
+
   // clocks
   struct timespec start_clock, stop_clock;
   clock_gettime(CLOCK_MONOTONIC, &start_clock);
   uint64_t start_tick, stop_tick, total_tick, average_total_tick;
   start_tick = fenced_rdtscp();
+
   // time steps
   for (i = 1; i < ITERATIONS; i++) {
 #if VERBOSE
@@ -215,6 +218,8 @@ int main(int argc, char *argv[]) {
       save_frame_all_domain(fp, &mesh, &temp_render);
 #endif
   }
+
+  
   stop_tick = fenced_rdtscp();
   total_tick = (uint64_t)((stop_tick - start_tick) / (ITERATIONS));
   clock_gettime(CLOCK_MONOTONIC, &stop_clock);

@@ -58,16 +58,28 @@ double get_vect_norme_2(const Vector vect1, const Vector vect2) {
  **/
 double get_cell_density(const lbm_mesh_cell_t cell) {
   // vars
+#if STANDARDLOOP
   int k;
+#endif
   double res = 0.0;
+#if OPTIMIZEDLOOP
+  double res2 = 0.0 ; 
+#endif
+
 
   // errors
 #if ASSERT
   assert(cell != NULL);
 #endif
-  // loop on directions
+  // loop on direction
+#if STANDARDLOOP
   for (k = 0; k < DIRECTIONS; k++)
     res += cell[k];
+#elif OPTIMIZEDLOOP
+  res=cell[0]+cell[1]+cell[2]+cell[3] ; 
+  res2=cell[4]+cell[5]+cell[6]+cell[7];
+  res+=res2+cell[8] ; 
+#endif
 
   // return res
   return res;
@@ -153,12 +165,24 @@ void compute_cell_collision(lbm_mesh_cell_t cell_out,
   get_cell_velocity(v, cell_in, density);
 
   // loop on microscopic directions
+#if STANDARDLOOP
   for (k = 0; k < DIRECTIONS; k++) {
     // compute f at equilibr.
     feq = compute_equilibrium_profile(v, density, k);
     // compute fout
     cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - feq);
   }
+#elif OPTIMIZEDLOOP
+double feq1 ; 
+  for (k = 0 ; k < 8 ; k+=2){
+    feq = compute_equilibrium_profile(v, density, k);
+    feq1 = compute_equilibrium_profile(v, density, k+1);
+    cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - feq) ; 
+    cell_out[k+1] = cell_in[k+1] - RELAX_PARAMETER * (cell_in[k+1] - feq1) ; 
+  }
+  feq = compute_equilibrium_profile(v, density, 8);
+  cell_out[8] = cell_in[8] - RELAX_PARAMETER * (cell_in[8] - feq);
+#endif
 }
 
 /*******************  FUNCTION  *********************/
@@ -255,7 +279,7 @@ void compute_outflow_zou_he_const_density(lbm_mesh_cell_t cell) {
 
 // errors
 #if DIRECTIONS != 9
-#error Implemented only for 9 directions
+#error Implemented only for 9 direction
 #endif
 
   // compute macroscopic v depeding on inner flow going onto the wall
@@ -348,7 +372,7 @@ void collision(Mesh *mesh_out, const Mesh *mesh_in) {
  **/
 void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
   // vars
-  int ii, jj;
+  int ii, jj, mm, nn;
 
   // loop on all cells
 #if STANDARDLOOP
@@ -369,6 +393,9 @@ void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
     }
   }
 #elif OPTIMIZEDLOOP
+
+
+
 #pragma omp parallel for schedule(static)
   for (int i = 0; i < mesh_out->width; i++) {
     for (int j = 0; j < mesh_out->height; j++) {
@@ -379,8 +406,9 @@ void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
         jj = (j + direction_matrix[k][1]);
         // propagate to neighboor nodes
         if ((ii >= 0 && ii < mesh_out->width) &&
-            (jj >= 0 && jj < mesh_out->height))
+            (jj >= 0 && jj < mesh_out->height)) {
           Mesh_get_cell(mesh_out, ii, jj)[k] = Mesh_get_cell(mesh_in, i, j)[k];
+        }
       }
     }
   }
