@@ -1,10 +1,10 @@
-iterations           = 480
+iterations           = 16000
 width                = 800
 height               = 160
 #obstacle_r           = 
 #obstacle_x           = 
 #obstacle_y           = 
-reynolds             = 1000
+reynolds             = 100
 inflow_max_velocity  = 0.100000
 inflow_max_velocity  = 0.100000
 output_filename      = resultat.raw
