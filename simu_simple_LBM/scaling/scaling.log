@@ -11,46 +11,6 @@ Configuration :
 [31m--- Base code ---[30m
 [33mBuilding executable ...[30m
 [32mDone ![35m
-[31m--> Strong scaling MPI[32m
-[35mRunning with 32 max nodes and 1 max threads per nodes
-[33mNODE : 1 , THREAD_PER_NODE : 1[32m
-Average tick : 45831483
-Average iteration time : 11.457934 (ms)
-[33mNODE : 2 , THREAD_PER_NODE : 1[32m
-Average tick : 226792978
-Average iteration time : 56.698587 (ms)
-[33mNODE : 4 , THREAD_PER_NODE : 1[32m
-Average tick : 335708587
-Average iteration time : 83.927736 (ms)
-[33mNODE : 8 , THREAD_PER_NODE : 1[32m
-Average tick : 335866545
-Average iteration time : 83.967303 (ms)
-[33mNODE : 16 , THREAD_PER_NODE : 1[32m
-Average tick : 243688272
-Average iteration time : 60.922590 (ms)
-[33mNODE : 32 , THREAD_PER_NODE : 1[32m
-Average tick : 230465886
-Average iteration time : 57.616990 (ms)
-[31m--> Strong scaling OMP[32m
-[35mRunning with 1 max nodes and 32 max threads per nodes
-[33mNODE : 1 , THREAD_PER_NODE : 1[32m
-Average tick : 44258885
-Average iteration time : 11.064823 (ms)
-[33mNODE : 1 , THREAD_PER_NODE : 2[32m
-Average tick : 13958343
-Average iteration time : 3.489619 (ms)
-[33mNODE : 1 , THREAD_PER_NODE : 4[32m
-Average tick : 7640314
-Average iteration time : 1.910097 (ms)
-[33mNODE : 1 , THREAD_PER_NODE : 8[32m
-Average tick : 4754102
-Average iteration time : 1.188537 (ms)
-[33mNODE : 1 , THREAD_PER_NODE : 16[32m
-Average tick : 3185751
-Average iteration time : 0.796445 (ms)
-[33mNODE : 1 , THREAD_PER_NODE : 32[32m
-Average tick : 2462029
-Average iteration time : 0.615513 (ms)
  
 [31m--- Optimized code ---[30m
 [33mBuilding executable ...[30m
@@ -58,43 +18,43 @@ Average iteration time : 0.615513 (ms)
 [31m--> Strong scaling MPI[32m
 [35mRunning with 32 max nodes and 1 max threads per nodes
 [33mNODE : 1 , THREAD_PER_NODE : 1[32m
-Average tick : 14352049
-Average iteration time : 3.588046 (ms)
+Average tick : 1391658912
+Average iteration time : 347.918367 (ms)
 [33mNODE : 2 , THREAD_PER_NODE : 1[32m
-Average tick : 7471844
-Average iteration time : 1.867979 (ms)
+Average tick : 732037534
+Average iteration time : 183.011314 (ms)
 [33mNODE : 4 , THREAD_PER_NODE : 1[32m
-Average tick : 3793435
-Average iteration time : 0.948368 (ms)
+Average tick : 389114273
+Average iteration time : 97.279601 (ms)
 [33mNODE : 8 , THREAD_PER_NODE : 1[32m
-Average tick : 1970860
-Average iteration time : 0.492720 (ms)
+Average tick : 319735331
+Average iteration time : 79.934693 (ms)
 [33mNODE : 16 , THREAD_PER_NODE : 1[32m
-Average tick : 1047215
-Average iteration time : 0.261807 (ms)
+Average tick : 367721556
+Average iteration time : 91.931378 (ms)
 [33mNODE : 32 , THREAD_PER_NODE : 1[32m
-Average tick : 580431
-Average iteration time : 0.145110 (ms)
+Average tick : 445067783
+Average iteration time : 111.268156 (ms)
 [31m--> Strong scaling OMP[32m
 [35mRunning with 1 max nodes and 32 max threads per nodes
 [33mNODE : 1 , THREAD_PER_NODE : 1[32m
-Average tick : 14931452
-Average iteration time : 3.732898 (ms)
+Average tick : 1455486180
+Average iteration time : 363.875390 (ms)
 [33mNODE : 1 , THREAD_PER_NODE : 2[32m
-Average tick : 7465324
-Average iteration time : 1.866349 (ms)
+Average tick : 739873549
+Average iteration time : 184.970354 (ms)
 [33mNODE : 1 , THREAD_PER_NODE : 4[32m
-Average tick : 3773353
-Average iteration time : 0.943347 (ms)
+Average tick : 393327151
+Average iteration time : 98.332841 (ms)
 [33mNODE : 1 , THREAD_PER_NODE : 8[32m
-Average tick : 1917646
-Average iteration time : 0.479417 (ms)
+Average tick : 326934579
+Average iteration time : 81.734522 (ms)
 [33mNODE : 1 , THREAD_PER_NODE : 16[32m
-Average tick : 1035419
-Average iteration time : 0.258857 (ms)
+Average tick : 376188447
+Average iteration time : 94.048125 (ms)
 [33mNODE : 1 , THREAD_PER_NODE : 32[32m
-Average tick : 680412
-Average iteration time : 0.170105 (ms)
+Average tick : 448325088
+Average iteration time : 112.082493 (ms)
  
 [31m--- Base code --[30m
 [33mBuilding executable ...[30m
@@ -102,97 +62,5 @@ Average iteration time : 0.170105 (ms)
 [31m--> Weak scaling MPI[32m
 [35mRunning with 32 max nodes and 1 max threads per nodes
 [33mNODE : 1, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_1.txt
-Average tick : 44149088
-Average iteration time : 11.037376 (ms)
 [33mNODE : 2, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_2.txt
-Average tick : 478354463
-Average iteration time : 119.589783 (ms)
 [33mNODE : 4, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_4.txt
-Average tick : 254848861
-Average iteration time : 63.712862 (ms)
-Average tick : 274447408
-Average iteration time : 68.612548 (ms)
-Average tick : 289819318
-Average iteration time : 72.455565 (ms)
-Average tick : 292315284
-Average iteration time : 73.079563 (ms)
-[33mNODE : 8, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_8.txt
-Average tick : 511905520
-Average iteration time : 127.977715 (ms)
-Average tick : 602376242
-Average iteration time : 150.595635 (ms)
-Average tick : 619488689
-Average iteration time : 154.873791 (ms)
-Average tick : 622763344
-Average iteration time : 155.692464 (ms)
-Average tick : 623639877
-Average iteration time : 155.911600 (ms)
-Average tick : 626298505
-Average iteration time : 156.576264 (ms)
-Average tick : 626091183
-Average iteration time : 156.524433 (ms)
-Average tick : 629246049
-Average iteration time : 157.313158 (ms)
-[33mNODE : 16, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_16.txt
-Average tick : 1538886231
-Average iteration time : 384.726059 (ms)
-Average tick : 1629292251
-Average iteration time : 407.327834 (ms)
-Average tick : 1748064340
-Average iteration time : 437.021208 (ms)
-Average tick : 1756025227
-Average iteration time : 439.011454 (ms)
-Average tick : 1785241879
-Average iteration time : 446.315703 (ms)
-Average tick : 1793589396
-Average iteration time : 448.402607 (ms)
-Average tick : 1794774340
-Average iteration time : 448.698846 (ms)
-Average tick : 1796431372
-Average iteration time : 449.113109 (ms)
-Average tick : 1797808838
-Average iteration time : 449.457479 (ms)
-Average tick : 1797820424
-Average iteration time : 449.460376 (ms)
-Average tick : 1801327721
-Average iteration time : 450.337211 (ms)
-Average tick : 1804596878
-Average iteration time : 451.154510 (ms)
-Average tick : 1807353994
-Average iteration time : 451.843797 (ms)
-Average tick : 1807794013
-Average iteration time : 451.953803 (ms)
-Average tick : 1810044639
-Average iteration time : 452.516466 (ms)
-Average tick : 1810650719
-Average iteration time : 452.667987 (ms)
-[33mNODE : 32, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_32.txt
-[33mNODE : 1, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_1.txt
-Average tick : 38331291
-Average iteration time : 9.582931 (ms)
-[33mNODE : 2, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_2.txt
-Average tick : 91737237
-Average iteration time : 22.934569 (ms)
-Average tick : 94585327
-Average iteration time : 23.646599 (ms)
-[33mNODE : 4, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_4.txt
-[33mNODE : 8, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_8.txt
-[33mNODE : 16, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_16.txt
-[33mNODE : 32, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_32.txt
-[31m--> Weak scaling OMP[32m
-[35mRunning with 1 max nodes and 32 max threads per nodes
-[33mNODE : 1, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_x_1.txt
-[33mNODE : 1, THREAD_PER_NODE : 2[32m, FILE : scaling/file/config_scaling_x_2.txt
-[33mNODE : 1, THREAD_PER_NODE : 4[32m, FILE : scaling/file/config_scaling_x_4.txt
-[33mNODE : 1, THREAD_PER_NODE : 8[32m, FILE : scaling/file/config_scaling_x_8.txt
-[33mNODE : 1, THREAD_PER_NODE : 16[32m, FILE : scaling/file/config_scaling_x_16.txt
-[33mNODE : 1, THREAD_PER_NODE : 32[32m, FILE : scaling/file/config_scaling_x_32.txt
-[33mNODE : 1, THREAD_PER_NODE : 1[32m, FILE : scaling/file/config_scaling_y_1.txt
-[33mNODE : 1, THREAD_PER_NODE : 2[32m, FILE : scaling/file/config_scaling_y_2.txt
-[33mNODE : 1, THREAD_PER_NODE : 4[32m, FILE : scaling/file/config_scaling_y_4.txt
-[33mNODE : 1, THREAD_PER_NODE : 8[32m, FILE : scaling/file/config_scaling_y_8.txt
-[33mNODE : 1, THREAD_PER_NODE : 16[32m, FILE : scaling/file/config_scaling_y_16.txt
-[33mNODE : 1, THREAD_PER_NODE : 32[32m, FILE : scaling/file/config_scaling_y_32.txt
- 
-[31m--- Optimized code ---[30m
-[33mBuilding executable ...[30m

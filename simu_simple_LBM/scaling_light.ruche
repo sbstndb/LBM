@@ -1,0 +1,125 @@
+[chps-18@ruche02 scaling]$ cat scaling_light.log 
+--- SCALING.sh ---
+Loading spack modules ...
+Done !
+Building executable ...
+Done !
+Configuration : 
+           -->  NODE         : 16
+           -->  TOTAL CPU    : 256
+           -->  CPU PER NODE : 16
+ 
+--- Base code ---
+Building executable ...
+Done !
+ 
+--- Optimized code ---
+Building executable ...
+Done !
+--> Strong scaling MPI
+Running with 16 max nodes and 1 max threads per nodes
+NODE : 1 , THREAD_PER_NODE : 1
+Average tick : 13523913
+Average iteration time : 6.455117 (ms)
+NODE : 2 , THREAD_PER_NODE : 1
+Average tick : 7312688
+Average iteration time : 3.490421 (ms)
+NODE : 4 , THREAD_PER_NODE : 1
+Average tick : 4007685
+Average iteration time : 1.912910 (ms)
+NODE : 8 , THREAD_PER_NODE : 1
+Average tick : 2128666
+Average iteration time : 1.016035 (ms)
+NODE : 16 , THREAD_PER_NODE : 1
+Average tick : 3222225
+Average iteration time : 1.538003 (ms)
+--> Strong scaling OMP
+Running with 1 max nodes and 16 max threads per nodes
+NODE : 1 , THREAD_PER_NODE : 1
+Average tick : 13476318
+Average iteration time : 6.432403 (ms)
+NODE : 1 , THREAD_PER_NODE : 2
+Average tick : 6861988
+Average iteration time : 3.275305 (ms)
+NODE : 1 , THREAD_PER_NODE : 4
+Average tick : 3531586
+Average iteration time : 1.685667 (ms)
+NODE : 1 , THREAD_PER_NODE : 8
+Average tick : 1739292
+Average iteration time : 0.830185 (ms)
+NODE : 1 , THREAD_PER_NODE : 16
+Average tick : 890672
+Average iteration time : 0.425128 (ms)
+ 
+--- Base code --
+Building executable ...
+Done !
+ 
+--- Optimized code ---
+Building executable ...
+Done !
+--> Weak scaling MPI
+Running with 16 max nodes and 1 max threads per nodes
+NODE : 1, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_1.txt
+Average tick : 13747707
+Average iteration time : 6.561942 (ms)
+NODE : 2, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_2.txt
+Average tick : 13959175
+Average iteration time : 6.662845 (ms)
+NODE : 4, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_4.txt
+Average tick : 13997479
+Average iteration time : 6.681141 (ms)
+NODE : 8, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_8.txt
+Average tick : 14208270
+Average iteration time : 6.781753 (ms)
+NODE : 16, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_16.txt
+Average tick : 36202943
+Average iteration time : 17.280044 (ms)
+NODE : 1, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_1.txt
+Average tick : 13479515
+Average iteration time : 6.433926 (ms)
+NODE : 2, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_2.txt
+Average tick : 14040464
+Average iteration time : 6.701642 (ms)
+NODE : 4, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_4.txt
+Average tick : 14247644
+Average iteration time : 6.800547 (ms)
+NODE : 8, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_8.txt
+Average tick : 14792418
+Average iteration time : 7.060572 (ms)
+NODE : 16, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_16.txt
+Average tick : 38744685
+Average iteration time : 18.493243 (ms)
+--> Weak scaling OMP
+Running with 1 max nodes and 16 max threads per nodes
+NODE : 1, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_x_1.txt
+Average tick : 13448154
+Average iteration time : 6.418957 (ms)
+NODE : 1, THREAD_PER_NODE : 2, FILE : scaling/file/config_scaling_x_2.txt
+Average tick : 13762216
+Average iteration time : 6.568864 (ms)
+NODE : 1, THREAD_PER_NODE : 4, FILE : scaling/file/config_scaling_x_4.txt
+Average tick : 14027710
+Average iteration time : 6.695587 (ms)
+NODE : 1, THREAD_PER_NODE : 8, FILE : scaling/file/config_scaling_x_8.txt
+Average tick : 14274502
+Average iteration time : 6.813384 (ms)
+NODE : 1, THREAD_PER_NODE : 16, FILE : scaling/file/config_scaling_x_16.txt
+Average tick : 17833397
+Average iteration time : 8.512085 (ms)
+NODE : 1, THREAD_PER_NODE : 1, FILE : scaling/file/config_scaling_y_1.txt
+Average tick : 13440017
+Average iteration time : 6.415079 (ms)
+NODE : 1, THREAD_PER_NODE : 2, FILE : scaling/file/config_scaling_y_2.txt
+Average tick : 13740926
+Average iteration time : 6.558707 (ms)
+NODE : 1, THREAD_PER_NODE : 4, FILE : scaling/fie/config_scaling_y_4.txt
+Average tick : 14031527
+Average iteration time : 6.697409 (ms)
+NODE : 1, THREAD_PER_NODE : 8, FILE : scaling/file/config_scaling_y_8.txt
+Average tick : 14482124
+Average iteration time : 6.912484 (ms)
+NODE : 1, THREAD_PER_NODE : 16, FILE : scaling/file/config_scaling_y_16.txt
+Average tick : 18348368
+Average iteration time : 8.757888 (ms)
+l

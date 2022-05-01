@@ -1,0 +1,68 @@
+[chps-18@ruche02 scaling]$ cat scaling_large_8000_16000.log 
+--- SCALING.sh ---
+Loading spack modules ...
+Done !
+Building executable ...
+Done !
+Configuration : 
+           -->  NODE         : 16
+           -->  TOTAL CPU    : 256
+           -->  CPU PER NODE : 16
+ 
+--- Base code ---
+Building executable ...
+Done !
+ 
+--- Optimized code ---
+Building executable ...
+Done !
+--> Strong scaling MPI
+Running with 16 max nodes and 16 max threads per nodes
+NODE : 1 , THREAD_PER_NODE : 16
+Average tick : 115737482
+Average iteration time : 55.242829 (ms)
+NODE : 2 , THREAD_PER_NODE : 16
+Average tick : 59141924
+Average iteration time : 28.228978 (ms)
+NODE : 4 , THREAD_PER_NODE : 16
+Average tick : 29892851
+Average iteration time : 14.268166 (ms)
+NODE : 8 , THREAD_PER_NODE : 16
+Average tick : 15315021
+Average iteration time : 7.310018 (ms)
+NODE : 16 , THREAD_PER_NODE : 16
+Average tick : 17211849
+Average iteration time : 8.215399 (ms)
+--> Strong scaling OMP
+Running with 16 max nodes and 16 max threads per nodes
+NODE : 16 , THREAD_PER_NODE : 1
+Average tick : 218550763
+Average iteration time : 104.316555 (ms)
+NODE : 16 , THREAD_PER_NODE : 2
+Average tick : 111361371
+Average iteration time : 53.153944 (ms)
+NODE : 16 , THREAD_PER_NODE : 4
+Average tick : 57359938
+Average iteration time : 27.378499 (ms)
+NODE : 16 , THREAD_PER_NODE : 8
+Average tick : 30598159
+Average iteration time : 14.604825 (ms)
+NODE : 16 , THREAD_PER_NODE : 16
+Average tick : 17002299
+Average iteration time : 8.115379 (ms)
+ 
+--- Base code --
+Building executable ...
+Done !
+ 
+--- Optimized code ---
+Building executable ...
+Done !
+--> Weak scaling MPI
+Running with 16 max nodes and 16 max threads per nodes
+NODE : 1, THREAD_PER_NODE : 16, FILE : scaling/file/config_scaling_x_1.txt
+Average tick : 895927
+Average iteration time : 0.427637 (ms)
+NODE : 2, THREAD_PER_NODE : 16, FILE : scaling/file/config_scaling_x_2.txt
+[chps-18@ruche02 scaling]$ 
+

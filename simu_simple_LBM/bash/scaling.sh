@@ -119,11 +119,11 @@ build_base
 
 NODE=$MAX_NODE
 THREAD_PER_NODE=1
-strong_scaling_MPI $NODE $THREAD_PER_NODE
+#strong_scaling_MPI $NODE $THREAD_PER_NODE
 
 NODE=1
 THREAD_PER_NODE=$MAX_THREAD_PER_NODE
-strong_scaling_OMP $NODE $THREAD_PER_NODE
+#strong_scaling_OMP $NODE $THREAD_PER_NODE
 
 echo " " | tee -a $FOLDER/$LOG
 echo "$(tput setaf 1)--- Optimized code ---$(tput setaf 0)" | tee -a $FOLDER/$LOG
