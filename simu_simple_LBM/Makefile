@@ -1,6 +1,7 @@
 #Commands
 CC=gcc
 MPICC=mpicc
+## this is for MPCFramework compilation
 #MPICC=mpc_cc
 #MPICC=vtcc -vtcc mpicc
 
@@ -9,6 +10,9 @@ SRC=src
 TARGET_DIR=target
 INCLUDE=include
 
+
+## This is for scalasca instrumentation... you need to load SCALASCA
+## like spack load scalasca
 SCALASCA=
 #SCALASCA="scalasca -instrument"
 
@@ -16,6 +20,11 @@ SCALASCA=
 RM=rm -f
 MAKEDEPEND=makedepend
 
+
+
+### there are compilation flag. You can disable or enable optimisations with these flags.
+## for example : make CCSPLIT="-DVERTICAL" CCORDER="-DOPTIMIZEDLOOP".
+##
 TUSELESSPART=USELESS
 TUSELESSPART=NOUSELESS
 CCUSELESSPART=-D$(TUSELESSPART)

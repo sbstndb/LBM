@@ -57,28 +57,29 @@ double get_vect_norme_2(const Vector vect1, const Vector vect2) {
  * densités microscopiques.
  **/
 double get_cell_density(const lbm_mesh_cell_t cell) {
+
   // vars
 #if STANDARDLOOP
   int k;
 #endif
   double res = 0.0;
 #if OPTIMIZEDLOOP
-  double res2 = 0.0 ; 
+  double res2 = 0.0;
 #endif
-
 
   // errors
 #if ASSERT
   assert(cell != NULL);
 #endif
+
   // loop on direction
 #if STANDARDLOOP
   for (k = 0; k < DIRECTIONS; k++)
     res += cell[k];
 #elif OPTIMIZEDLOOP
-  res=cell[0]+cell[1]+cell[2]+cell[3] ; 
-  res2=cell[4]+cell[5]+cell[6]+cell[7];
-  res+=res2+cell[8] ; 
+  res = cell[0] + cell[1] + cell[2] + cell[3];
+  res2 = cell[4] + cell[5] + cell[6] + cell[7];
+  res += res2 + cell[8];
 #endif
 
   // return res
@@ -173,12 +174,13 @@ void compute_cell_collision(lbm_mesh_cell_t cell_out,
     cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - feq);
   }
 #elif OPTIMIZEDLOOP
-double feq1 ; 
-  for (k = 0 ; k < 8 ; k+=2){
+  double feq1;
+  for (k = 0; k < 8; k += 2) {
     feq = compute_equilibrium_profile(v, density, k);
-    feq1 = compute_equilibrium_profile(v, density, k+1);
-    cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - feq) ; 
-    cell_out[k+1] = cell_in[k+1] - RELAX_PARAMETER * (cell_in[k+1] - feq1) ; 
+    feq1 = compute_equilibrium_profile(v, density, k + 1);
+    cell_out[k] = cell_in[k] - RELAX_PARAMETER * (cell_in[k] - feq);
+    cell_out[k + 1] =
+        cell_in[k + 1] - RELAX_PARAMETER * (cell_in[k + 1] - feq1);
   }
   feq = compute_equilibrium_profile(v, density, 8);
   cell_out[8] = cell_in[8] - RELAX_PARAMETER * (cell_in[8] - feq);
@@ -393,9 +395,6 @@ void propagation(Mesh *mesh_out, const Mesh *mesh_in) {
     }
   }
 #elif OPTIMIZEDLOOP
-
-
-
 #pragma omp parallel for schedule(static)
   for (int i = 0; i < mesh_out->width; i++) {
     for (int j = 0; j < mesh_out->height; j++) {

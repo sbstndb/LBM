@@ -173,8 +173,6 @@ int main(int argc, char *argv[]) {
   // barrier to wait all before start
   MPI_Barrier(MPI_COMM_WORLD);
 
-
-
   // clocks
   struct timespec start_clock, stop_clock;
   clock_gettime(CLOCK_MONOTONIC, &start_clock);
@@ -183,6 +181,7 @@ int main(int argc, char *argv[]) {
 
   // time steps
   for (i = 1; i < ITERATIONS; i++) {
+
 #if VERBOSE
     // print progress
     if (rank == RANK_MASTER)
@@ -196,6 +195,7 @@ int main(int argc, char *argv[]) {
 #if BARRIER
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
+
     // compute collision term
     collision(&temp, &mesh);
 
@@ -203,6 +203,7 @@ int main(int argc, char *argv[]) {
     // need to wait all before doing next step
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
+
     // propagate values from node to neighboors
     lbm_comm_ghost_exchange(&mesh_comm, &temp);
     propagation(&mesh, &temp);
@@ -219,7 +220,6 @@ int main(int argc, char *argv[]) {
 #endif
   }
 
-  
   stop_tick = fenced_rdtscp();
   total_tick = (uint64_t)((stop_tick - start_tick) / (ITERATIONS));
   clock_gettime(CLOCK_MONOTONIC, &stop_clock);
@@ -237,7 +237,6 @@ int main(int argc, char *argv[]) {
          total_clock_sec);
   printf("Iteration elapsed time from rank %d : \n (ms) : %f\n", rank,
          iteration_clock_msec);
-
 #endif
   //
   MPI_Reduce(&total_tick, &average_total_tick, 1, MPI_UNSIGNED_LONG_LONG,
