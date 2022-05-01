@@ -9,6 +9,9 @@ SRC=src
 TARGET_DIR=target
 INCLUDE=include
 
+SCALASCA=
+#SCALASCA="scalasca -instrument"
+
 
 RM=rm -f
 MAKEDEPEND=makedepend
@@ -22,7 +25,7 @@ TSPLIT=VERTICAL
 CCSPLIT=-D$(TSPLIT)
 
 TVERBOSE=VERBOSE
-#TVERBOSE=NOVERBOSE
+TVERBOSE=NOVERBOSE
 CCVERBOSE=-D$(TVERBOSE)
 
 TSAVEFILE=SAVEFILE
@@ -75,10 +78,10 @@ TARGET=lbm display
 all: $(TARGET)
 
 %.o: %.c
-	$(MPICC) $(CCALL) $(CFLAGS) -c -o $@ $< $(LDFLAGS)
+	$(SCALASCA) $(MPICC) $(CCALL) $(CFLAGS) -c -o $@ $< $(LDFLAGS)
 
 lbm: $(LBM_OBJECTS)
-	$(MPICC) $(CCALL) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(SCALASCA) $(MPICC) $(CCALL) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 display: $(SRC)/display.c
 	$(CC) $(CFLAGS) -o $@ $(SRC)/display.c
