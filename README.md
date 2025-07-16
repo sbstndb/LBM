@@ -1,5 +1,9 @@
 # LBM-HPC: A 2D Lattice Boltzmann Method Simulation for HPC Training
 
+![LBM Simulation Example](lbm.png)
+
+*Example of a 2D LBM simulation showing fluid flow around an obstacle. The color represents velocity magnitude, with red indicating higher velocities.*
+
 This project is an experimental implementation of a 2D Lattice Boltzmann Method (LBM) simulation. Its primary goal is to serve as a training ground for parallel programming, performance optimization, and scalability analysis on High-Performance Computing (HPC) systems.
 
 ## Core Concepts
